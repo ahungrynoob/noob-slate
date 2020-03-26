@@ -10,7 +10,7 @@ cache: yarn
 env:
   # Do multiple runs for testing and linting.
   matrix:
-    - TEST_TYPE=test
+    - TEST_TYPE=cov
     - TEST_TYPE=lint:eslint
     - TEST_TYPE=lint:prettier
 
@@ -28,3 +28,5 @@ script:
     set -e
     yarn $TEST_TYPE
     set +e
+after_script:
+  - npminstall codecov && codecov

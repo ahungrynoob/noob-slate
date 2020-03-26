@@ -20,7 +20,7 @@
     "serve": "cd ./site && next",
     "start": "npm-run-all --parallel --print-label watch serve",
     "test": "mocha --require ./config/babel/register.cjs ./packages/*/test/index.js",
-    "cov": "nyc -r text-summary -r json-summary -r json -r lcov mocha --require ./config/babel/register.cjs ./packages/*/test/index.js",
+    "cov": "nyc --cache false -r text-summary -r json-summary -r json -r lcov mocha --require ./config/babel/register.cjs ./packages/*/test/index.js",
     "test:inspect": "yarn test --inspect-brk",
     "watch": "yarn build:rollup --watch"
   },

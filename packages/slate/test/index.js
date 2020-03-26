@@ -17,17 +17,12 @@ const withTest = editor => {
 }
 
 describe('slate', () => {
-  fixtures(
-    __dirname,
-    'interfaces',
-    ({ module }) => {
-      let { input, test, output } = module
-      if (Editor.isEditor(input)) {
-        input = withTest(input)
-      }
-      const result = test(input)
-      assert.deepEqual(result, output)
-    },
-    { skip: true }
-  )
+  fixtures(__dirname, 'interfaces', ({ module }) => {
+    let { input, test, output } = module
+    if (Editor.isEditor(input)) {
+      input = withTest(input)
+    }
+    const result = test(input)
+    assert.deepEqual(result, output)
+  })
 })
