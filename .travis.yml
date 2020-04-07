@@ -10,21 +10,18 @@ cache: yarn
 env:
   # Do multiple runs for testing and linting.
   matrix:
-    - TEST_TYPE=test
+    - TEST_TYPE=cov
     - TEST_TYPE=lint:eslint
     - TEST_TYPE=lint:prettier
 
 before_script:
   # When linting, build the dependencies so they can be resolved.
-  - |
-    set -e
-    if [[ $TEST_TYPE == 'lint:eslint' ]]; then
-      yarn build
-    fi
-    set +e
+   - yarn build
 script:
   # Run testing or linting depending on the environment.
   - |
     set -e
     yarn $TEST_TYPE
     set +e
+after_script:
+  - npminstall codecov && codecov

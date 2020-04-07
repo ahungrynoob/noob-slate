@@ -312,11 +312,12 @@ export const Path = {
       if (path.length === 0) {
         return
       }
-
+      // 从 p 中操作 op
       switch (operation.type) {
         case 'insert_node': {
           const { path: op } = operation
-
+          // 插入一个 path， 插入的path必须是p的父级或者endsBefore
+          // 只有在p之前的插入才会影响到p
           if (
             Path.equals(op, p) ||
             Path.endsBefore(op, p) ||
@@ -341,11 +342,13 @@ export const Path = {
         }
 
         case 'merge_node': {
+          // to check: 这里的postion是何意？
           const { path: op, position } = operation
 
           if (Path.equals(op, p) || Path.endsBefore(op, p)) {
             p[op.length - 1] -= 1
           } else if (Path.isAncestor(op, p)) {
+            // 这里感觉会有bug
             p[op.length - 1] -= 1
             p[op.length] += position
           }
@@ -361,12 +364,14 @@ export const Path = {
               p[p.length - 1] += 1
             } else if (affinity === 'backward') {
               // Nothing, because it still refers to the right path.
+              // to check
             } else {
               return null
             }
           } else if (Path.endsBefore(op, p)) {
             p[op.length - 1] += 1
           } else if (Path.isAncestor(op, p) && path[op.length] >= position) {
+            // to check: position是何意
             p[op.length - 1] += 1
             p[op.length] -= position
           }
@@ -375,6 +380,7 @@ export const Path = {
         }
 
         case 'move_node': {
+          // 在p上 move op to onp
           const { path: op, newPath: onp } = operation
 
           // If the old and new path are the same, it's a no-op.
@@ -389,19 +395,21 @@ export const Path = {
               const i = Math.min(onp.length, op.length) - 1
               copy[i] -= 1
             }
-
+            // to check: 这里少考虑了一种情况，p 可能是endsBefore onp
             return copy.concat(p.slice(op.length))
           } else if (
             Path.endsBefore(onp, p) ||
             Path.equals(onp, p) ||
             Path.isAncestor(onp, p)
           ) {
+            // to check: 这里少考虑了一种情况， op 可能是 onp的 ancestor
             if (Path.endsBefore(op, p)) {
               p[op.length - 1] -= 1
             }
 
             p[onp.length - 1] += 1
           } else if (Path.endsBefore(op, p)) {
+            // to check: 这条语句不可能跑到
             if (Path.equals(onp, p)) {
               p[onp.length - 1] += 1
             }
